@@ -1,13 +1,13 @@
 ---
 
 sudo: required
-dist: xenial
+dist: bionic
 
 language: python
 python:
-  - '2.7'
-  - '3.6'
-  - '3.7'
+  - 2.7
+  - 3.6
+  - 3.7
 
 branches:
   only:
@@ -15,7 +15,7 @@ branches:
     - master
 
 script:
-  - make test
+  - make test PYTHONEXE=$(which python)
 
 after_success:
   coveralls

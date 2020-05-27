@@ -1,4 +1,5 @@
 PATH := $(PWD)/.venv/bin:$(shell printenv PATH)
+PYTHONEXE:=$(shell which python3)
 SHELL := env PATH=$(PATH) /bin/bash
 VENV_DIR=.venv
 
@@ -10,9 +11,8 @@ clean:
 .PHONY: deps
 ## Create virtualenv, install dependencies
 deps:
-	test -d ${VENV_DIR} || virtualenv ${VENV_DIR}
+	test -d ${VENV_DIR} || ${PYTHONEXE} -m virtualenv --always-copy -p $(PYTHONEXE) ${VENV_DIR}
 	${VENV_DIR}/bin/pip install -r requirements/main.txt
-	virtualenv --relocatable ${VENV_DIR}
 	python setup.py install
 
 .PHONY: help
