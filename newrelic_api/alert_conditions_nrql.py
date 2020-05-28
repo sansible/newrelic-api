@@ -36,6 +36,7 @@ class AlertConditionsNRQL(Resource):
                         "expected_groups": "integer",
                         "ignore_overlap": "boolean",
                         "value_function": "string",
+                        "violation_time_limit_seconds": "integer",
                         "terms": [
                             {
                                 "duration": "string",
@@ -67,7 +68,7 @@ class AlertConditionsNRQL(Resource):
     def update(  # noqa: C901
             self, alert_condition_nrql_id, policy_id, name=None, threshold_type=None, query=None,
             since_value=None, terms=None, expected_groups=None, value_function=None,
-            runbook_url=None, ignore_overlap=None, enabled=True):
+            runbook_url=None, ignore_overlap=None, violation_time_limit_seconds=None, enabled=True):
         """
         Updates any of the optional parameters of the alert condition nrql
 
@@ -107,6 +108,10 @@ class AlertConditionsNRQL(Resource):
         :type ignore_overlap: bool
         :param ignore_overlap: Whether to ignore overlaps for outlier alerts
 
+        :type violation_time_limit_seconds: int
+        :param violation_time_limit_seconds: Use to automatically close
+            instance-based violations after the number of seconds specified
+
         :type enabled: bool
         :param enabled: Whether to enable that alert condition
 
@@ -129,6 +134,7 @@ class AlertConditionsNRQL(Resource):
                 "expected_groups": "integer",
                 "ignore_overlap": "boolean",
                 "value_function": "string",
+                "violation_time_limit_seconds": "integer",
                 "terms": [
                     {
                         "duration": "string",
@@ -198,6 +204,12 @@ class AlertConditionsNRQL(Resource):
         elif 'value_function' in target_condition_nrql:
             data['nrql_condition']['value_function'] = target_condition_nrql['value_function']
 
+        if violation_time_limit_seconds is not None:
+            data['nrql_condition']['violation_time_limit_seconds'] = violation_time_limit_seconds
+        elif 'violation_time_limit_seconds' in target_condition_nrql:
+            data['nrql_condition']['violation_time_limit_seconds'] = \
+                target_condition_nrql['violation_time_limit_seconds']
+
         if data['nrql_condition']['type'] == 'static':
             if 'value_function' not in data['nrql_condition']:
                 raise ConfigurationException(
@@ -223,10 +235,10 @@ class AlertConditionsNRQL(Resource):
             data=data
         )
 
-    def create(
+    def create(  # noqa: C901
             self, policy_id, name, threshold_type, query, since_value, terms,
             expected_groups=None, value_function=None, runbook_url=None,
-            ignore_overlap=None, enabled=True):
+            ignore_overlap=None, violation_time_limit_seconds=None, enabled=True):
         """
         Creates an alert condition nrql
 
@@ -259,6 +271,10 @@ class AlertConditionsNRQL(Resource):
 
         :type ignore_overlap: bool
         :param ignore_overlap: Whether to ignore overlaps for outlier alerts
+
+        :type violation_time_limit_seconds: int
+        :param violation_time_limit_seconds: Use to automatically close
+            instance-based violations after the number of seconds specified
 
         :type enabled: bool
         :param enabled: Whether to enable that alert condition
@@ -324,6 +340,9 @@ class AlertConditionsNRQL(Resource):
         if value_function is not None:
             data['nrql_condition']['value_function'] = value_function
 
+        if violation_time_limit_seconds is not None:
+            data['nrql_condition']['violation_time_limit_seconds'] = violation_time_limit_seconds
+
         if data['nrql_condition']['type'] == 'static':
             if 'value_function' not in data['nrql_condition']:
                 raise ConfigurationException(
@@ -370,6 +389,7 @@ class AlertConditionsNRQL(Resource):
                 "expected_groups": "integer",
                 "ignore_overlap": "boolean",
                 "value_function": "string",
+                "violation_time_limit_seconds": "integer",
                 "terms": [
                     {
                         "duration": "string",

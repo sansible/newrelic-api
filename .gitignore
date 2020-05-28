@@ -24,8 +24,9 @@ env/
 # OSX
 .DS_Store
 
-# Pycharm
+# IDEs
 .idea/
+.vscode/
 
 # Documentation artifacts
 docs/_build/
